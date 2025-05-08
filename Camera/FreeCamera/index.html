@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FreeCamera Example</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+</head>
+<body>
+<canvas id="renderCanvas" style="width: 100%; height: 100%;"></canvas>
+<script>
+
+    //first i need to grab the canvas through its id
+    const canvas = document.getElementById("renderCanvas");
+    
+    //second i need to create a engine and this is like engine in a car ,  with out it you cant do anything even nothing will appear on screen  because it 
+    //handles the rendering and animation loop 
+    const engine = new BABYLON.Engine(canvas, true);
+
+   // This part creates the scene. A scene is the space or environment where all 3D objects, lights, and cameras are placed.
+     const scene = new BABYLON.Scene(engine);
+
+    // FreeCamera : this is a class and this recieve 3 params any  string as a name , position , and if you want then a scene also
+    const camera = new BABYLON.FreeCamera("freeCam", new BABYLON.Vector3(0, 1, -10));
+
+    ///this line activate the movement of the 3d object by user input
+    camera.attachControl(canvas, true);
+
+     // Light : BABYLON.HemisphericLight taes 3 params (scene params) is stil need to understand but other 2 =  1 for naming (the string ) ,
+    //Another is  The direction vector (e.g., new BABYLON.Vector3(1, 1, 1)) is **from where the light is coming**.
+   // - X axis: Left (-) or Right (+)
+  // - Y axis: Down (-) or Up (+)
+ // - Z axis: Back (-) or Forward (+) 
+    const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 1), scene);
+
+    // Ground
+    const ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 10, height: 10}, scene);
+
+
+    //Ball {diameter : 1 means size of the object , segment : means softness}
+    const ball = BABYLON.MeshBuilder.CreateSphere("ball", {diameter: 1, segments: 15}, scene);
+
+
+    engine.runRenderLoop(() => {
+        scene.render();
+    });
+</script>
+</body>
+</html>
