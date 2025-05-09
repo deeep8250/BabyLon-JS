@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+</head>
+<body>
+  
+<canvas style="height: 100%; width: 100%;" id="canvas"> </canvas>
+
+
+<script>
+  const canva = document.getElementById("canvas");
+     const engine = new BABYLON.Engine(canva, true);
+
+  const scene =  new BABYLON.Scene(engine)
+
+  const camera = new BABYLON.ArcRotateCamera("camera" , Math.PI/2 , Math.PI/2 , 10 , BABYLON.Vector3(0,0,0) )
+  camera.attachControl(canva , true)
+
+  const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1,1,1)) 
+   light.groundColor = new BABYLON.Color3(0.5, 0.5, 0.5); // add light to bottom-facing sides
+
+
+ //transform node (grouping all meshes)
+ const group = new BABYLON.TransformNode("group",scene)
+
+   //box mesh
+  const mesh =   BABYLON.MeshBuilder.CreateBox("box" , {size : 2 })
+  mesh.position.x =-3
+  //ball  mesh
+  const ball =   BABYLON.MeshBuilder.CreateSphere  ("circle" , {diameter : 2 })
+ ball.position.x =3
+  mesh.parent = group
+  ball.parent = group
+  engine.runRenderLoop(()=>{
+    scene.render()
+  })
+
+</script>
+
+</body>
+</html>
