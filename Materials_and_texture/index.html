@@ -1,0 +1,67 @@
+<!-- notes : remember materials is like a wrapper on any 3d objects without any wrapper we cant add texture and also not able to design betterly 
+ 
+
+Materials are like the skin of a 3D object. Without them, you can’t:
+
+Add textures (like images on the object).
+
+Change the object’s appearance (like its color, shininess, or transparency).
+
+So, before you can make your object look nice with textures or special effects, you always need to give it a material. It’s what makes the object look good!
+
+
+
+-->
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+</head>
+<body>
+   
+      <canvas style="width: 100%; height: 100%;" id="canva"></canvas>  
+  
+
+<script>
+
+  const canva = document.getElementById("canva");
+  const engine = new BABYLON.Engine(canva , true);
+  const scene = new BABYLON.Scene(engine);
+
+  
+  const camera =  new BABYLON.ArcRotateCamera("arc",Math.PI/2,Math.PI/2, 5 ,new BABYLON.Vector3(0,0,0),scene)
+  camera.attachControl(canva,true)
+  const light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+  
+
+  const mesh = BABYLON.MeshBuilder.CreateBox("box",{size : 2}, scene)
+
+
+
+
+  //creating material
+  const materialBox = new BABYLON.StandardMaterial("box",scene)
+   //changing color
+  //  materialBox.diffuseColor = new BABYLON.Color3(0.2,0.6,1)
+
+ ///adding texture
+ materialBox.diffuseTexture = new BABYLON.Texture("image.png",scene)
+
+  //adding the material in mesh(create box)
+  mesh.material = materialBox
+
+
+engine.runRenderLoop(()=>{
+    scene.render()
+})
+
+
+</script>
+</body>
+</html>
