@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sun in Galaxy Sky - Babylon.js</title>
+    <style>
+        html, body {
+            margin:0; padding:0; overflow:hidden; width:100%; height:100%;
+        }
+        canvas {
+            width: 100%; height: 100%; display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canva"></canvas>
+
+    <!-- Babylon.js core -->
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
+    <script>
+        const canvas = document.getElementById("canva");
+        const engine = new BABYLON.Engine(canvas, true);
+
+        const createScene = () => {
+            const scene = new BABYLON.Scene(engine);
+
+            // ArcRotateCamera: rotate around (0,0,0)
+            const camera = new BABYLON.ArcRotateCamera("camera", Math.PI / 2, Math.PI / 2, 30, BABYLON.Vector3.Zero(), scene);
+            camera.attachControl(canvas, true);
+            camera.lowerBeta = 0.1; // prevent going under ground
+            camera.upperBeta = Math.PI / 2; // prevent flipping over
+
+            // Light for ambient illumination (won't affect sun if emissive)
+            const light = new BABYLON.HemisphericLight("hemiLight", new BABYLON.Vector3(0, 1, 0), scene);
+            light.intensity = 0.8;
+
+            // --- Create the Sun sphere ---
+            const sun = BABYLON.MeshBuilder.CreateSphere("sun", {diameter: 5, segments: 64}, scene);
+            
+            // Create emissive material for Sun (glowing)
+            const sunMat = new BABYLON.StandardMaterial("sunMat", scene);
+            sunMat.emissiveColor = new BABYLON.Color3(1, 0.7, 0); // bright orange-yellow
+            sunMat.disableLighting = true; // ignore lights, always glow
+            
+            // Optional: Add a sun texture if you want
+            // sunMat.emissiveTexture = new BABYLON.Texture("https://i.imgur.com/7wqTQk6.jpg", scene);
+
+            sun.material = sunMat;
+            sun.position = BABYLON.Vector3.Zero();
+
+            // --- Create the Galaxy Sky ---
+            // Method 1: Skybox cube with galaxy texture (6 images)
+
+            const skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 1000 }, scene);
+            const skyboxMaterial = new BABYLON.StandardMaterial("skyBoxMat", scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.disableLighting = true;
+
+            // Use a galaxy cubemap texture - you can find free ones or use this demo
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("https://playground.babylonjs.com/textures/galaxy", scene);
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+
+            skybox.material = skyboxMaterial;
+
+            return scene;
+        };
+
+        const scene = createScene();
+
+        engine.runRenderLoop(() => {
+            scene.render();
+        });
+
+        window.addEventListener("resize", () => {
+            engine.resize();
+        });
+    </script>
+</body>
+</html>
